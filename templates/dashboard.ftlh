@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Directory - AJACKUS</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <#-- Assign employees data from backend -->
+    <#assign employees = mockEmployeeList>
+    
+    <!-- Header Section -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <h1>AJACKUS</h1>
+                    <span class="tagline">Employee Directory</span>
+                </div>
+                <div class="header-info">
+                    <span>For more information visit <a href="https://www.ajackus.com" target="_blank">www.ajackus.com</a></span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <div class="container">
+            <!-- Dashboard Controls -->
+            <div class="dashboard-controls">
+                <div class="search-section">
+                    <div class="search-bar">
+                        <input type="text" id="searchInput" placeholder="Search by name or email" class="search-input">
+                        <button class="search-btn">🔍</button>
+                    </div>
+                </div>
+                
+                <div class="controls-section">
+                    <div class="sort-controls">
+                        <label for="sortBy">Sort:</label>
+                        <select id="sortBy" class="sort-select">
+                            <option value="">--Select--</option>
+                            <option value="firstName">First Name</option>
+                            <option value="department">Department</option>
+                        </select>
+                        
+                        <label for="showEntries">Show:</label>
+                        <select id="showEntries" class="show-select">
+                            <option value="10">10</option>
+                            <option value="25">25</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                        </select>
+                    </div>
+                    
+                    <div class="action-buttons">
+                        <button id="filterBtn" class="btn btn-secondary">Filter</button>
+                        <button id="addEmployeeBtn" class="btn btn-primary">Add Employee</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filter Panel -->
+            <div id="filterPanel" class="filter-panel">
+                <div class="filter-content">
+                    <h3>Filter Employees</h3>
+                    <div class="filter-form">
+                        <div class="form-group">
+                            <label for="filterFirstName">First Name:</label>
+                            <input type="text" id="filterFirstName" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="filterDepartment">Department:</label>
+                            <input type="text" id="filterDepartment" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="filterRole">Role:</label>
+                            <input type="text" id="filterRole" class="form-control">
+                        </div>
+                        <div class="filter-actions">
+                            <button id="applyFilterBtn" class="btn btn-primary">Apply</button>
+                            <button id="resetFilterBtn" class="btn btn-secondary">Reset</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Employee Grid - Rendered by Freemarker -->
+            <div class="employee-grid" id="employeeGrid">
+                <#list employees as employee>
+                    <div class="employee-card" data-employee-id="${employee.id}">
+                        <div class="employee-header">
+                            <h3 class="employee-name">${employee.firstName} ${employee.lastName}</h3>
+                            <span class="employee-id">ID: ${employee.id}</span>
+                        </div>
+                        <div class="employee-details">
+                            <p><strong>Email:</strong> ${employee.email}</p>
+                            <p><strong>Department:</strong> ${employee.department}</p>
+                            <p><strong>Role:</strong> ${employee.role}</p>
+                        </div>
+                        <div class="employee-actions">
+                            <button class="btn btn-edit" data-id="${employee.id}">Edit</button>
+                            <button class="btn btn-delete" data-id="${employee.id}">Delete</button>
+                        </div>
+                    </div>
+                </#list>
+            </div>
+
+            <!-- Pagination -->
+            <div class="pagination-container">
+                <div class="pagination-info">
+                    <span id="paginationInfo">Showing 1 to ${employees?size} of ${employees?size} entries</span>
+                </div>
+                <div class="pagination-controls">
+                    <button id="prevPageBtn" class="btn btn-pagination" disabled>Previous</button>
+                    <div id="pageNumbers" class="page-numbers"></div>
+                    <button id="nextPageBtn" class="btn btn-pagination" disabled>Next</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Add/Edit Employee Modal -->
+    <div id="employeeModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Add Employee</h2>
+                <span class="close" id="closeModal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="employeeForm" class="employee-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="firstName">First Name *</label>
+                            <input type="text" id="firstName" name="firstName" class="form-control" required>
+                            <div class="error-message" id="firstNameError"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="lastName">Last Name *</label>
+                            <input type="text" id="lastName" name="lastName" class="form-control" required>
+                            <div class="error-message" id="lastNameError"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="email">Email *</label>
+                            <input type="email" id="email" name="email" class="form-control" required>
+                            <div class="error-message" id="emailError"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="department">Department *</label>
+                            <select id="department" name="department" class="form-control" required>
+                                <option value="">Select Department</option>
+                                <option value="HR">HR</option>
+                                <option value="IT">IT</option>
+                                <option value="Finance">Finance</option>
+                                <option value="Marketing">Marketing</option>
+                                <option value="Sales">Sales</option>
+                                <option value="Operations">Operations</option>
+                            </select>
+                            <div class="error-message" id="departmentError"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="role">Role *</label>
+                        <select id="role" name="role" class="form-control" required>
+                            <option value="">Select Role</option>
+                            <option value="Manager">Manager</option>
+                            <option value="Developer">Developer</option>
+                            <option value="Designer">Designer</option>
+                            <option value="Analyst">Analyst</option>
+                            <option value="Coordinator">Coordinator</option>
+                            <option value="Specialist">Specialist</option>
+                            <option value="Associate">Associate</option>
+                            <option value="Executive">Executive</option>
+                        </select>
+                        <div class="error-message" id="roleError"></div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" id="cancelBtn" class="btn btn-secondary">Cancel</button>
+                        <button type="submit" id="saveBtn" class="btn btn-primary">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 Employee Directory App. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="/static/js/data.js"></script>
+    <script src="/static/js/utils.js"></script>
+    <script src="/static/js/employeeManager.js"></script>
+    <script src="/static/js/uiController.js"></script>
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
