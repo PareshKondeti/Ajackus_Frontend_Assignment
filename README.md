@@ -98,5 +98,12 @@ employee-directory/
 - Navigate using Previous/Next buttons
 - Click page numbers for direct navigation
 
+### Challenges Faced
+1. **Freemarker Integration**: Balancing server-side templating with client-side interactivity
+2. **Responsive Design**: Ensuring consistent experience across all devices
+
+## What I'd Improve with More Time
+1. **Advanced Features**: Implement role-based permissions, advanced filtering
+
 
 ### Note: I have only used Chatgpt to structure the code and css properly 
