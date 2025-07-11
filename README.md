@@ -97,3 +97,6 @@ employee-directory/
 - Choose page size from the dropdown (10, 25, 50, 100)
 - Navigate using Previous/Next buttons
 - Click page numbers for direct navigation
+
+
+### Note: I have only used Chatgpt to structure the code and css properly 
